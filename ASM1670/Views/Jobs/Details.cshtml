@@ -1,0 +1,58 @@
+﻿@model ASM1670.Models.Job
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<!-- Job Detail Start -->
+<div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container">
+        <div class="row gy-5 gx-4">
+            <div class="col-lg-8">
+                <div class="d-flex align-items-center mb-5">
+                    <img class="flex-shrink-0 img-fluid border rounded" src="@Html.DisplayFor(model => model.JobPicture)" alt="" style="width: 80px; height: 80px;">
+                    <div class="text-start ps-4">
+                        <h3 class="mb-3">@Html.DisplayFor(model => model.Title)</h3>
+                        <span class="text-truncate me-3"><i class="fa fa-location-arrow  me-2"></i>@Html.DisplayFor(model => model.Location)</span>
+                        <span class="text-truncate me-0"><i class="far fa-money-bill-alt  me-2"></i>$@Html.DisplayFor(model => model.Salary)</span>
+                        <span class="text-truncate me-0">  <i class="far fa-folder  me-2"></i>@Html.DisplayFor(model => model.Category.Name)</span>
+
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <h4 class="mb-3">Job description</h4>
+                    <p>@Html.DisplayFor(model => model.Description)</p>
+                    <h4 class="mb-3">Qualifications</h4>
+                    <p>@Html.DisplayFor(model => model.ProfessionalQualifications)</p>
+                </div>
+
+                <div class="Apply">
+                    <h4 class="mb-4">Apply For The Job</h4>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <form asp-controller="JobApplications" asp-action="Create" method="get">
+                            <input type="hidden" name="jobId" value="@Model.Id" />
+                            <button class="btn btn-success" type="submit">Apply</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <p>You need to login to apply for this job.</p>
+                    }
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="bg-light rounded p-5 mb-4 wow slideInUp" data-wow-delay="0.1s">
+                    <h4 class="mb-4">Job Summery</h4>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>Name: @Html.DisplayFor(model => model.Title)</p>                    <p><i class="fa fa-angle-right text-primary me-2"></i>Job Nature: Full Time</p>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>Salary: @Html.DisplayFor(model => model.Salary)</p>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>Location: @Html.DisplayFor(model => model.Location)</p>
+                    <p class="m-0"><i class="fa fa-angle-right text-primary me-2"></i>Date Line: @Html.DisplayFor(model => model.DeadLine)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Job Detail End -->

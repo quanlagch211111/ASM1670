@@ -1,0 +1,284 @@
+﻿@model IEnumerable<ASM1670.Models.ChatMessage>
+@using System.Security.Claims
+
+@{
+    var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    var receiverId = ViewBag.ReceiverId;
+    var receiver = ViewBag.Receiver;
+}
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="chat-container justify-content-center">
+    <div class="container mt-3">
+        <div class="chat-avatar" style="margin-bottom: 10px;">
+            <div style="display: flex; align-items: center;" class="mt-3">
+                @if (receiver != null && receiver.Profile != null)
+                {
+                    <img width="50" height="50" style="border-radius: 50%; border: 1px solid white; background-color: white;" src="@receiver.Profile.ProfilePicture" alt="Retail Admin">
+                    <p style="margin-left: 10px; color: white; font-size: 15px;">@receiver.Profile.FullName</p>
+                }
+            </div>
+        </div>
+
+        <ul id="messagesList" class="chat-box chatContainerScroll">
+             @if (Model.Any())
+            {
+                 @foreach (var message in Model)
+            {
+                if (message.SenderId == currentUserId)
+                {
+                    <li class="chat-right" style="margin-right: 20px;">
+                        <div class="chat-hour">@message.Timestamp.ToString("hh:mm tt") <span class="fa fa-check-circle"></span></div>
+                        <div class="chat-text" style="background-color: #339933;">
+                            @message.Message
+                        </div>
+                    </li>
+                }
+                else
+                {
+                    <li class="chat-left" style="margin-left: 20px;">
+                        <div class="chat-text">@message.Message</div>
+                        <div class="chat-hour">@message.Timestamp.ToString("hh:mm tt") <span class="fa fa-check-circle"></span></div>
+                    </li>
+                }
+            }
+            }else
+            {
+                <div class="no-message">Hãy nhắn tin để trao đổi thông tin !!!</div>
+            }
+        </ul>
+
+        <div class="form-group mt-3 mb-0">
+            <form method="post" action="@Url.Action("SendMessage", "ChatMessages")" class="d-flex" id="sendMessageForm">
+                <input type="hidden" name="receiverId" value="@ViewBag.ReceiverId" id="senderId" />
+                <input class="form-control me-2" placeholder="Type your message here..." name="message" id="messageInput" required />
+                <button class="btn btn-success" type="submit" id="sendButton">
+                    <i class="fa fa-send"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Chat right side */
+    .chat-container {
+        position: relative;
+        padding: 1em;
+        width: 70%;
+        height: 70%;
+        margin: 20px auto;
+        background-color: #330033;
+        box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+    }
+
+        .chat-container li.chat-left,
+        .chat-container li.chat-right {
+            display: flex;
+            flex: 1;
+            flex-direction: row;
+            margin-bottom: 40px;
+            margin-top: 10px;
+        }
+
+        .chat-container li img {
+            width: 48px;
+            height: 48px;
+            border-radius: 30px;
+        }
+
+        .chat-container li .chat-avatar {
+            margin-right: 20px;
+        }
+
+        .chat-container li.chat-right {
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+            .chat-container li.chat-right > .chat-avatar {
+                margin-left: 20px;
+                margin-right: 0;
+            }
+
+        .chat-container li .chat-name {
+            font-size: .75rem;
+            color: #999;
+            text-align: center;
+        }
+
+        .chat-container li .chat-text {
+            padding: .4rem 1rem;
+            color: white;
+            border-radius: 4px;
+            background: #555;
+            font-weight: 300;
+            line-height: 150%;
+            position: relative;
+        }
+
+            .chat-container li .chat-text:before {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 0;
+                top: 10px;
+                left: -20px;
+                border: 10px solid;
+                border-color: transparent #555 transparent transparent;
+            }
+
+        .chat-container li.chat-right > .chat-text {
+            /* text-align: right; */
+        }
+
+            .chat-container li.chat-right > .chat-text:before {
+                right: -20px;
+                border-color: transparent transparent transparent #339933;
+                left: inherit;
+            }
+
+        .chat-container li .chat-hour {
+            padding: 0;
+            margin-bottom: 10px;
+            font-size: .75rem;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            margin: 0 0 0 15px;
+            color: white;
+        }
+
+            .chat-container li .chat-hour > span {
+                font-size: 16px;
+                color: #9ec94a;
+            }
+
+        .chat-container li.chat-right > .chat-hour {
+            margin: 0 15px 0 0;
+        }
+
+    .chat-form {
+        padding: 15px;
+        width: 100%;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #fff;
+        border-top: 1px solid white;
+    }
+
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .card {
+        border: 0;
+        background: #f4f5fb;
+        border-radius: 2px;
+        margin-bottom: 2rem;
+        box-shadow: none;
+    }
+
+    .chat-box {
+        max-height: 500px;
+        min-height: 500px;
+        overflow-y: auto;
+        position: relative;
+        scrollbar-width: none;
+        background-image: url("https://e1.pxfuel.com/desktop-wallpaper/736/718/desktop-wallpaper-hair-salon-backgrounds-salon-elements-is-a-full-beauty-salon-thumbnail.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+    }
+
+        .chat-box::-webkit-scrollbar {
+            display: none; /* Safari và Chrome */
+        }
+
+    .form-group {
+        position: sticky;
+        bottom: 0;
+        width: 100%;
+    }
+
+    .no-message {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 20px;
+    }
+
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+<script>
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl("/notificationHub")
+        .configureLogging(signalR.LogLevel.Information)
+        .build();
+
+    connection.start().then(function () {
+        console.log("Connected to SignalR successfully");
+    }).catch(function (err) {
+        console.error("Connection error:", err);
+    });
+
+    connection.on("ReceiveMessage", function (senderId, message, timestamp) {
+        var li = document.createElement("li");
+        li.className = "chat-left";
+        var date;
+        try {
+            date = new Date(timestamp);
+            if (isNaN(date.getTime())) {
+                throw new Error("Invalid date");
+            }
+        } catch (error) {
+            console.error("Invalid date format:", error);
+            date = new Date();
+        }
+        var formattedTime = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+
+        li.innerHTML = `
+            <div class="chat-text" style="margin-left:20px">${message}</div>
+            <div class="chat-hour">${formattedTime} <span class="fa fa-check-circle"></span></div>
+        `;
+
+        var messagesList = document.getElementById("messagesList");
+        messagesList.appendChild(li);
+        var noMessageDiv = document.querySelector(".no-message");
+        if (noMessageDiv) {
+            noMessageDiv.style.display = "none";
+        }
+        messagesList.scrollTop = messagesList.scrollHeight;
+    });
+
+    function sendMessage(receiverId, message) {
+        connection.invoke("SendMessage", receiverId, message)
+            .catch((error) => {
+                console.error("Error sending message:", error);
+            });
+    }
+
+    document.getElementById("sendButton").addEventListener("click", function () {
+        const receiverId = document.getElementById("receiverId").value;
+        const message = document.getElementById("messageInput").value;
+
+        if (!message.trim()) {
+            event.preventDefault();
+        } else {
+            sendMessage(receiverId, message);
+            document.getElementById("messageInput").value = "";
+        }
+    });
+
+    window.onload = function () {
+        var messagesList = document.getElementById("messagesList");
+        messagesList.scrollTop = messagesList.scrollHeight;
+    };
+</script>

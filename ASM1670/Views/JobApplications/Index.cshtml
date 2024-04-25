@@ -1,0 +1,60 @@
+﻿@model IEnumerable<ASM1670.Models.JobApplication>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CoverLetter)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Job)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Applicant)
+            </th>
+            <th>
+                Full Name
+            </th>
+            <th>
+                CV Picture
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CoverLetter)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Job.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Applicant.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Applicant.Profile.FullName)
+                </td>
+                <td>
+                    <img class="flex-shrink-0 img-fluid border rounded" src="@Html.DisplayFor(modelItem => item.CVPicture)" alt="" style="width: 80px; height: 80px;">
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.JobApplicationId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.JobApplicationId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.JobApplicationId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

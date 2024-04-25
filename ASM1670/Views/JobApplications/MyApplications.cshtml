@@ -1,0 +1,66 @@
+﻿@model List<ASM1670.Models.JobApplication>
+
+@{
+    ViewData["Title"] = "My Applications";
+}
+
+<h1>My Applications</h1>
+
+<p>
+    <a asp-action="Index">Back to List</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Job.Title)
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Job.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    <div class="btn-group" role="group">
+                        @if (item.Status == ApplicationStatus.Pending || item.Status == ApplicationStatus.Canceled)
+                        {
+                            <a class="btn btn-danger me-2" asp-action="Delete" asp-route-id="@item.JobApplicationId">Delete</a>
+                            <a class="btn btn-info  me-2" asp-action="Details" asp-route-id="@item.JobApplicationId">Details</a>
+                            <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.JobApplicationId">Edit</a>
+                        }
+                        else if (item.Status == ApplicationStatus.Accepted || item.Status == ApplicationStatus.Processing)
+                        {
+                            <form asp-action="ChangeStatus" asp-route-id="@item.JobApplicationId" method="post" style="display: inline;">
+                                <div class="input-group input-group-sm">
+                                    <select name="status" class="form-control" style="margin-right: 10px;">
+                                        <option value="@ApplicationStatus.Processing">Processing</option>
+                                        <option value="@ApplicationStatus.Finished">Finished</option>
+                                        <option value="@ApplicationStatus.Canceled">Canceled</option>
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-primary">Update Status</button>
+                                    </div>
+                                </div>
+                            </form>
+                        }
+                       
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

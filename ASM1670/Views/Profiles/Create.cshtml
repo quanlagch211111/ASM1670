@@ -1,0 +1,80 @@
+﻿@model ASM1670.Models.Profile
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+
+<div class="container " style="margin-top:50px; ">
+	<div class="row justify-content-center">
+		<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+			<form asp-action="Create" enctype="multipart/form-data">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<div class="card h-100">
+					<div class="card-body">
+						<div class="row gutters">
+							<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+								<h6 class="mb-2 text-primary">Profile Create</h6>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label asp-for="FullName">Full Name</label>
+									<input asp-for="FullName" type="text" class="form-control" placeholder="Enter full name">
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label asp-for="Description">Description</label>
+									<input asp-for="Description" type="text" class="form-control" placeholder="Enter Description">
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label asp-for="Address">Address</label>
+									<input asp-for="Address" type="text" class="form-control" placeholder="Enter Address">
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label asp-for="Skill">SkillL</label>
+									<input asp-for="Skill" class="form-control" placeholder="Enter Skill">
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label asp-for="Experience">Experience</label>
+									<input asp-for="Experience" class="form-control" placeholder="Enter Experience">
+								</div>
+							</div>
+							<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="form-group">
+									<label asp-for="ProfileImage" class="control-label"></label>
+									<input asp-for="ProfileImage" type="file" class="form-control" />
+									<span asp-validation-for="ProfileImage" class="text-danger"></span>
+								</div>
+							</div>
+						</div>
+						<div class="row gutters" style="margin-top: 20px">
+							<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+								<div class="text-right">
+									<button asp-action="Index" class="btn btn-secondary">Cancel</button>
+									<button type="submit" class="btn btn-primary">Create</button>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,87 @@
+﻿@model IEnumerable<ASM1670.Models.Notification>
+
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+<div class="container" style="margin-top: 50px; min-height: 90vh">
+    <main role="main" class="container">
+        <h2>Notifications</h2>
+        <div id="notificationList" class="row">
+            @foreach (var notification in Model.OrderByDescending(n => !n.IsRead))
+            {
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header bg-dark">
+                            @if (notification.IsRead)
+                            {
+                                <span class="badge badge-success">Read</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-warning">Unread</span>
+                            }
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Notification</h5>
+                            <p class="card-text">@notification.Message</p>
+                            <span class="float-right">
+                                @if (!notification.IsRead)
+                                {
+                                    <a asp-action="MarkAsRead" asp-route-id="@notification.NotificationId" class="btn btn-primary btn-sm">Mark as Read</a>
+                                }
+                                <a asp-action="Delete" asp-route-id="@notification.NotificationId" class="btn btn-danger btn-sm">Delete</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </main>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+    <script>
+        var connection = new signalR.HubConnectionBuilder().withUrl("/notificationHub").build();
+
+        connection.start().then(function () {
+            console.log("SignalR Connected");
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
+
+        connection.on("ReceiveNotification", function (message) {
+            console.log("New notification received:", message);
+            var notificationList = document.getElementById("notificationList");
+            var listItem = document.createElement("div");
+            listItem.className = "col-md-6";
+            listItem.innerHTML = `
+                        <div class="card mb-3">
+                            <div class="card-header bg-dark">
+                                <span class="badge badge-warning">Unread</span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Notification</h5>
+                                <p class="card-text">${message}</p>
+                                <span class="float-right">
+                                    <a href="#" class="btn btn-primary btn-sm">Mark as Read</a>
+                                    <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                                </span>
+                            </div>
+                        </div>`;
+            notificationList.insertBefore(listItem, notificationList.firstChild);
+        });
+
+        document.addEventListener("click", function (e) {
+            if (e.target && e.target.classList.contains("mark-as-read")) {
+                var notificationId = e.target.dataset.notificationId;
+                fetch(`/notification/MarkAsRead?id=${notificationId}`, { method: "POST" });
+            } else if (e.target && e.target.classList.contains("delete-notification")) {
+                var notificationId = e.target.dataset.notificationId;
+                fetch(`/notification/Delete?id=${notificationId}`, { method: "POST" });
+                e.target.closest(".card").remove();
+            }
+        });
+    </script>
+}

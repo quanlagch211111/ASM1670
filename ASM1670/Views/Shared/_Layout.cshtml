@@ -1,0 +1,237 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ASM1670</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ASM1670.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5+z72Ybuql+pW+Fxz1G55z51L5C2xkrM7KRUC+ft" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+
+</head>
+<body>
+
+ <header>
+        <div class="navbar navbar-light  navbar-expand-md px-3" style="background-color:white; box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;">
+            <div class="container-fluid">
+                <!-- Column 1: Brand -->
+                <div class="navbar-brand">
+                    <a style="font-size:20px;text-decoration:none;color:cornflowerblue;margin-right: 0 20px;" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img width="50" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqBDsPxzOSrKNoSVYRrlrrJXyL3Ee-MSgO7VHhAz0nNA&s" />
+                        JobMatch</a>
+                </div>
+
+                <!-- Column 2: Search Bar -->
+                <div class="w-20 text-black">
+                    <div class="input-icons position-relative">
+                        <form class="form-inline my-2 my-lg-0" asp-controller="Jobs" asp-action="Search" method="get">
+                            <div class="input-group">
+                                <input style="border-radius:30px; margin-left:40px; width:300px" class="form-control mr-sm-2" type="search" placeholder="Search Jobs" aria-label="Search" name="searchQuery">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-success" hidden type="submit"><i class="bi bi-search"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Column 3: Menu -->
+                <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="menu">
+                    <ul class="navbar-nav ms-auto" style="list-style:none;">
+                        <li class="nav-item mx-3">
+
+                            <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link text-black"><i class="fas fa-home"></i> Home</a>
+                        </li>
+                        <li class="nav-item mx-3">
+
+                            <a asp-area="" asp-controller="Jobs" asp-action="Index" class="nav-link text-black"><i class="fas fa-briefcase"></i> Jobs</a>
+                        </li>
+                        <li class="nav-item mx-3">
+
+                            <a asp-area="" asp-controller="Profiles" asp-action="Index" class="nav-link text-black"><i class="fas fa-user"></i> FreeLancers</a>
+                        </li>
+                        @{
+                            if (User.Identity.IsAuthenticated)
+                            {
+                                <li class="nav-item mx-3">
+                                    <a asp-area="" asp-controller="Profiles" asp-action="MyCvProfile" class="nav-link text-black">
+                                        <i class="fas fa-file-alt"></i>
+                                        Profile
+                                    </a>
+                                </li>
+                            }
+                        }
+                        @{
+                            if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item mx-3">
+                                    <a asp-area="" asp-controller="Dashboards" asp-action="Index" class="nav-link text-black">
+                                        <i class="fa fa-dashboard"></i>
+                                        Dashboard
+                                    </a>
+                                </li>
+                            }
+                        }
+                        <li class="nav-item mx-3">
+                            <a class="nav-link position-relative text-black" asp-area="" asp-controller="Notifications" asp-action="Index">
+                                <i class="fas fa-envelope"></i>
+                                Notifications
+                                @if (ViewBag.UnreadNotificationCount != null)
+                                {
+                                    <span id="chatNotif"
+                                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+
+                                        @ViewBag.UnreadNotificationCount
+                                    </span>
+                                }
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Column 4: Login Partial -->
+                <div class="w-20">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="nav-item dropdown text-black">
+                            <a  href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                <i  class="fa fa-user text-black"></i>
+                            </a>
+                            <div class="dropdown-menu rounded-0 m-0">
+                                <a id="manage" class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+                                <a asp-controller="Profiles" asp-action="MyCVProfile" class="dropdown-item">Profile</a>
+                                @if (User.IsInRole("Employers"))
+                                {
+                                    <a asp-area="" asp-controller="JobApplications" asp-action="Applications" class="dropdown-item">Applications</a>
+                                }
+                                else if (User.IsInRole("Job Seekers"))
+                                {
+                                    <a asp-area="" asp-controller="JobApplications" asp-action="MyApplications" class="dropdown-item">My Applications</a>
+
+                                }
+                                @if (User.IsInRole("Employers") || User.IsInRole("Admin"))
+                                {
+                                    <a asp-area="" asp-controller="Jobs" asp-action="Manage" class="dropdown-item">Manage Jobs</a>
+                                }
+                                @if (User.IsInRole("Employers") || User.IsInRole("Job Seekers"))
+                                {
+                                    <a asp-area="" asp-controller="Role" asp-action="ManageUserRole" class="dropdown-item">My Role</a>
+                                }
+                                <a asp-area="" asp-controller="ChatMessages" asp-action="Index" class="dropdown-item">Chat</a>
+
+                                <li class="dropdown-item">
+                                    <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                        <button style="border:none; padding:0" id="logout" type="submit" class="nav-item nav-link">Logout</button>
+                                    </form>
+                                </li>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <partial name="_loginPartial" />
+                    }
+                </div>
+                <div class="w-20">
+                    <a asp-area="" asp-controller="Jobs" asp-action="Create" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Post A Job<i class="fa fa-arrow-right ms-3"></i></a>
+
+                </div>
+            </div>
+        </div>
+ </header>
+
+   
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer_area section_padding_130_0">
+        <div class="ft-container">
+            <div class="row">
+                <!-- Single Widget-->
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="single-footer-widget section_padding_0_130">
+                        <!-- Footer Logo-->
+                        <div class="footer-logo mb-3"></div>
+                        <p>Appland is completely creative, lightweight, clean app landing page.</p>
+                        <!-- Copywrite Text-->
+                        <div class="copywrite-text mb-5">
+                            <p class="mb-0">Made with <i class="lni-heart mr-1"></i>by<a class="ml-1" href="https://wrapbootstrap.com/user/DesigningWorld">Designing World</a></p>
+                        </div>
+                        <!-- Footer Social Area-->
+                        <div class="footer_social_area"><a href="#" data-toggle="tooltip" data-placement="top" title="" data-original-title="Facebook"><i class="fa fa-facebook"></i></a><a href="#" data-toggle="tooltip" data-placement="top" title="" data-original-title="Pinterest"><i class="fa fa-pinterest"></i></a><a href="#" data-toggle="tooltip" data-placement="top" title="" data-original-title="Skype"><i class="fa fa-skype"></i></a><a href="#" data-toggle="tooltip" data-placement="top" title="" data-original-title="Twitter"><i class="fa fa-twitter"></i></a></div>
+                    </div>
+                </div>
+                <!-- Single Widget-->
+                <div class="col-12 col-sm-6 col-lg">
+                    <div class="single-footer-widget section_padding_0_130">
+                        <!-- Widget Title-->
+                        <h5 class="widget-title">About</h5>
+                        <!-- Footer Menu-->
+                        <div class="footer_menu">
+                            <ul>
+                                <li><a href="#">About Us</a></li>
+                                <li><a href="#">Corporate Sale</a></li>
+                                <li><a href="#">Terms &amp; Policy</a></li>
+                                <li><a href="#">Community</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Single Widget-->
+                <div class="col-12 col-sm-6 col-lg">
+                    <div class="single-footer-widget section_padding_0_130">
+                        <!-- Widget Title-->
+                        <h5 class="widget-title">Support</h5>
+                        <!-- Footer Menu-->
+                        <div class="footer_menu">
+                            <ul>
+                                <li><a href="#">Help</a></li>
+                                <li><a href="#">Support</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                                <li><a href="#">Term &amp; Conditions</a></li>
+                                <li><a href="#">Help &amp; Support</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Single Widget-->
+                <div class="col-12 col-sm-6 col-lg">
+                    <div class="single-footer-widget section_padding_0_130">
+                        <!-- Widget Title-->
+                        <h5 class="widget-title">Contact</h5>
+                        <!-- Footer Menu-->
+                        <div class="footer_menu">
+                            <ul>
+                                <li><a href="#">Call Centre</a></li>
+                                <li><a href="#">Email Us</a></li>
+                                <li><a href="#">Term &amp; Conditions</a></li>
+                                <li><a href="#">Help Center</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

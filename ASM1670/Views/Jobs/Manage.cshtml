@@ -1,0 +1,58 @@
+﻿@using System.Security.Claims;
+@model IEnumerable<ASM1670.Models.Job>
+
+@{
+    ViewData["Title"] = "Manage Jobs";
+}
+
+<!-- Manage Jobs Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.3s">
+            <div class="tab-content">
+                <div id="tab-1" class="tab-pane fade show p-0 active">
+                    @foreach (var item in Model)
+                    {
+                        <div class="job-item p-4 mb-4">
+                            <div class="row g-4">
+                                <div class="col-sm-12 col-md-8 d-flex align-items-center">
+                                    <img class="flex-shrink-0 img-fluid border rounded" src="@Html.DisplayFor(modelItem => item.JobPicture)" alt="" style="width: 80px; height: 80px;">
+                                    <div class="text-start ps-4">
+                                        <h5 class="mb-3">@Html.DisplayFor(modelItem => item.Title)</h5>
+                                        <span class="text-truncate me-3"><i class="fa fa-location-arrow text-primary me-2"></i>@Html.DisplayFor(modelItem => item.Location)</span>
+                                        <span class="text-truncate me-3"><i class="fa fa-briefcase text-primary"></i> Level: @Html.DisplayFor(modelItem => item.ProfessionalQualifications)</span>
+                                        <span class="text-truncate me-3"><i class="far fa-money-bill-alt text-primary me-2"></i>$@Html.DisplayFor(modelItem => item.Salary)</span>
+                                        <span class="text-truncate me-0"><i class="fa fa-folder text-primary me-2"></i>@Html.DisplayFor(modelItem => item.Category.Name)</span>
+
+                                        <br /> <br />
+
+                                     
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                                    <div class="d-flex mb-3">
+                                        @if (User.IsInRole("Admin") || User.IsInRole("Employers"))
+                                        {
+                                            <span class="btn btn-warning me-3"><a style="text-decoration:none; color:white" class="function-btn" asp-action="Edit" asp-route-id="@item.Id">Edit</a></span>
+                                            <span class="btn btn-danger me-3"><a style="text-decoration:none; color:white" class="function-btn" asp-action="Delete" asp-route-id="@item.Id">Delete</a></span>
+                                        }
+                                        <span class="btn btn-info"><a style="text-decoration:none; color:white" class="function-btn" asp-action="Details" asp-route-id="@item.Id">Details</a></span>
+                                    </div>
+                                    <small class="text-truncate"><i class="far fa-calendar-alt text-primary me-2"></i>DeadLine: @Html.DisplayFor(modelItem => item.DeadLine)</small>
+                                </div>
+
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div id="tab-2" class="tab-pane fade show p-0">
+                    <p>Content of tab 2</p>
+                </div>
+                <div id="tab-3" class="tab-pane fade show p-0">
+                    <p>Content of tab 3</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Manage Jobs End -->

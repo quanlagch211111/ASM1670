@@ -1,0 +1,95 @@
+﻿@model ASM1670.Models.Job
+
+@{
+	ViewData["Title"] = "Edit";
+}
+
+<div class="container" style="margin-top:50px">
+	<div class="row gutters"
+		<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+			<div class="card h-100">
+			 <form asp-action="Edit" enctype="multipart/form-data">
+				<input type="hidden" asp-for="Id" />
+
+				<div class="card-body">
+					<div class="row gutters">
+						<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+							<h6 class="mb-2 text-primary">Personal Details</h6>
+						</div>
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+							<div class="form-group">
+								<label asp-for="Title" class="control-label"></label>
+								<input asp-for="Title" class="form-control" />
+								<span asp-validation-for="Title" class="text-danger"></span>
+							</div>
+						</div>
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+							<div class="form-group">
+								 <label asp-for="Description" class="control-label"></label>
+								<input asp-for="Description" class="form-control" />
+								<span asp-validation-for="Description" class="text-danger"></span>
+							</div>
+						</div>
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+							<div class="form-group">
+								 <label asp-for="ProfessionalQualifications" class="control-label"></label>
+								<input asp-for="ProfessionalQualifications" class="form-control" />
+								<span asp-validation-for="ProfessionalQualifications" class="text-danger"></span>
+							</div>
+						</div>
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+							<div class="form-group">
+								<label asp-for="Salary" class="control-label"></label>
+								<input asp-for="Salary" class="form-control" />
+								<span asp-validation-for="Salary" class="text-danger"></span>
+							</div>
+						</div>
+					</div>
+					<div class="row gutters">
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+							 <label asp-for="Location" class="control-label"></label>
+							<input asp-for="Location" class="form-control" />
+							<span asp-validation-for="Location" class="text-danger"></span>
+						</div>
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+							<div class="form-group">
+								 <label asp-for="DeadLine" class="control-label"></label>
+								<input asp-for="DeadLine" class="form-control" />
+								<span asp-validation-for="DeadLine" class="text-danger"></span>
+							</div>
+						</div>
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+							<div class="form-group">
+								 <label asp-for="CategoryId" class="control-label"></label>
+								<select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+							</div>
+						</div>
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+							<div class="form-group">
+								<label asp-for="JobImage" class="control-label"></label>
+								<input asp-for="JobImage" type="file" class="form-control" />
+								<span asp-validation-for="JobImage" class="text-danger"></span>
+							</div>
+						</div>
+					</div>
+					<div class="row gutters" style="margin-top:30px">
+						<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+							<div class="text-right">
+								<button asp-action="Index" id="submit" name="submit" class="btn btn-secondary">Cancel</button>
+								<button type="submit" id="submit" name="submit" class="btn btn-success">Edit</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

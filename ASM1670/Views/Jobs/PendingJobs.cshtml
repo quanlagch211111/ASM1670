@@ -1,0 +1,46 @@
+﻿@model IEnumerable<ASM1670.Models.Job>
+
+@{
+    ViewData["Title"] = "Pending Jobs";
+}
+
+<h1>Pending Jobs</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Professional Qualifications</th>
+            <th>Salary</th>
+            <th>Location</th>
+            <th>Deadline</th>
+            <th>Employer</th>
+            <th>Category</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var job in Model)
+        {
+            <tr>
+                <td>@job.Title</td>
+                <td>@job.Description</td>
+                <td>@job.ProfessionalQualifications</td>
+                <td>@job.Salary</td>
+                <td>@job.Location</td>
+                <td>@job.DeadLine</td>
+                <td>@(job.Employer?.Profile?.FullName ?? "Unknown")</td>
+                <td>@job.Category?.Name</td>
+                <td>
+                <form asp-action="ApproveJob" asp-route-id="@job.Id" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-success">Approve</button>
+                </form>
+                <form asp-action="RejectJob" asp-route-id="@job.Id" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Reject</button>
+                </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

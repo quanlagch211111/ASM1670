@@ -1,0 +1,87 @@
+﻿@model List<ASM1670.Models.JobApplication>
+
+@{
+    ViewData["Title"] = "Applications";
+}
+
+<h1>Job Applications</h1>
+
+<p>
+    <a asp-action="Index">Back to List</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                User Email
+            </th>
+            <th>
+                Full Name
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().CoverLetter)
+            </th>
+            <th>
+                Job Title
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Applicant.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Applicant.Profile.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CoverLetter)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Job.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @if (item.Status == ApplicationStatus.Pending)
+                    {
+                        <form asp-action="ChangeStatus" asp-route-id="@item.JobApplicationId" method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-success" name="status" value="@ApplicationStatus.Accepted">Accept</button>
+                            <button type="submit" class="btn btn-danger" name="status" value="@ApplicationStatus.Rejected">Reject</button>
+                        </form>
+                    }
+                    else
+                    {
+                       
+                        <form asp-action="ChangeStatus" asp-route-id="@item.JobApplicationId" method="post" style="display: inline;">
+                            <div class="input-group input-group-sm">
+                                <select name="status" class="form-control" style="width:10px; margin-right: 10px">
+                                    <option value="@ApplicationStatus.Accepted">Accepted</option>
+                                    <option value="@ApplicationStatus.Rejected">Rejected</option>
+                                    <option value="@ApplicationStatus.Pending">Pending</option>
+                                    <option value="@ApplicationStatus.Processing">Processing</option>
+                                    <option value="@ApplicationStatus.Finished">Finished</option>
+                                    <option value="@ApplicationStatus.Canceled">Canceled</option>
+                                </select>
+                                <div class="input-group-append ml-2">
+                                    <button type="submit" class="btn btn-primary">Update Status</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
