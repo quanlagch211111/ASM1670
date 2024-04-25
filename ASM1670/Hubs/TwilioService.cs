@@ -20,16 +20,6 @@ namespace ASM1670.Hubs
             TwilioClient.Init(_accountSid, _authToken);
         }
 
-        public async Task SendSmsAsync(string toPhoneNumber, string message)
-        {
-            var messageOptions = new CreateMessageOptions(new PhoneNumber(toPhoneNumber))
-            {
-                From = new PhoneNumber(_twilioPhoneNumber),
-                Body = message
-            };
-
-            await MessageResource.CreateAsync(messageOptions);
-        }
     }
 
 }
