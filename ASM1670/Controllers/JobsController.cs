@@ -342,6 +342,7 @@ namespace ASM1670.Controllers
                 .Include(j => j.Employer)
                 .ThenInclude(j => j.Profile)
                 .ToListAsync();
+                .ToListAsync();
 
             if (jobs.Count == 0)
             {
