@@ -12,8 +12,6 @@ namespace ASM1670.Models
         public string? FullName { get; set; }
         public string? Address { get; set; }
         public string Skill { get; set; } = "";
-                public string University { get; set; }
-                public string Age { get; set; }
         public string? ProfilePicture { get; set; }
         public string? Experience { get; set; }
         [NotMapped]
