@@ -16,8 +16,6 @@ namespace ASM1670.Controllers
         private readonly ASM1670Context _context = context;
         private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
 
-
-        // GET: Profiles
         public async Task<IActionResult> Index()
         {
             ViewBag.UnreadNotificationCount = await GetUnreadNotificationCount();
@@ -25,8 +23,6 @@ namespace ASM1670.Controllers
             return View(await aSM1670Context.ToListAsync());
         }
 
-
-        // GET: Profiles/Details
         public async Task<IActionResult> Details(int? id)
         {
             ViewBag.UnreadNotificationCount = await GetUnreadNotificationCount();
@@ -44,7 +40,7 @@ namespace ASM1670.Controllers
 
             return View(profile);
         }
-        //GET: Profiles/MyProfile
+
         public async Task<IActionResult> MyCvProfile()
         {
             ViewBag.UnreadNotificationCount = await GetUnreadNotificationCount();
@@ -70,7 +66,6 @@ namespace ASM1670.Controllers
             }
         }
 
-        // GET: Profiles/Create
         public async Task<IActionResult> Create()
         {
             ViewBag.UnreadNotificationCount = await GetUnreadNotificationCount();
@@ -83,7 +78,6 @@ namespace ASM1670.Controllers
             return View();
         }
 
-        // POST: Profiles/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ProfileId,UserId,FullName,Description,Address,Skill,Experience,ProfileImage")] Profile profile)
@@ -110,7 +104,6 @@ namespace ASM1670.Controllers
             return View(profile);
         }
 
-        // GET: Profiles/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             ViewBag.UnreadNotificationCount = await GetUnreadNotificationCount();
@@ -134,7 +127,6 @@ namespace ASM1670.Controllers
             return View(profile);
         }
 
-        // POST: Profiles/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ProfileId,UserId,FullName,Description,Address,Skill,Experience, ProfileImage")] Profile profile)
@@ -195,7 +187,6 @@ namespace ASM1670.Controllers
             return View(profile);
         }
 
-        // GET: Profiles/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             ViewBag.UnreadNotificationCount = await GetUnreadNotificationCount();
@@ -221,7 +212,6 @@ namespace ASM1670.Controllers
             return View(profile);
         }
 
-        // POST: Profiles/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
